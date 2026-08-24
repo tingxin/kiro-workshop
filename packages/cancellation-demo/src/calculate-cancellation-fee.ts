@@ -24,6 +24,7 @@ export type CancellationFeeQuote =
 export function calculateCancellationFee(
   _input: CancellationFeeInput,
 ): CancellationFeeQuote {
+  // TODO(KIRO-LAB): use the approved package-root calculator and return CALCULATED + trace.
   return {
     status: "NOT_IMPLEMENTED",
     charge: ZERO_MONEY,

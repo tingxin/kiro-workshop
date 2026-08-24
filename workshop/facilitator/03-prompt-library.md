@@ -103,47 +103,46 @@
 不要替参与者选择业务方案。
 ```
 
-## P06：整理已确认决策
+## P06：根据人工会议记录创建 Decision Log
 
 ```text
-根据附加的原始需求和“模拟产品确认记录”，生成一份 V1 决策摘要。
+根据附加的原始需求、需求分析和本次会议明确批准的决定，创建
+`docs/decision-log/cancellation-no-show-fee-v1.md`。
 
 必须分成三栏：
 1. 已确认并进入 V1
 2. 仍待确认，不允许实现时猜测
 3. 明确不在 V1 范围
 
-每条使用唯一 Decision ID，注明来源、影响的需求章节、验收方式。模拟产品确认记录与原文冲突时，保留冲突说明，不要静默覆盖。
+每条使用唯一 Decision ID，注明会议来源、影响的原始需求章节、边界和验收方式。只记录人工明确说出的决定；不得读取讲师答案，不得按行业经验补全。会议决定与原文冲突时保留差异，不要静默覆盖。
 ```
 
-## P07：创建 Feature Spec
+## P07：由学员创建 Feature Spec
 
 ```text
-为“取消订单与爽约费规则中心 V1”创建 Feature Spec。
+为“取消订单与爽约费规则中心 V1”创建 Feature Spec `cancellation-no-show-fee-v1`。
 
-上下文规则：
-- 原始业务文档是需求来源。
-- 模拟产品确认记录是本次 Workshop 的 V1 基线。
-- 两者冲突时，以确认记录为准并记录差异。
-- 未确认事项不得擅自实现。
+唯一允许的业务上下文：
+- 原始业务文档；
+- `workshop-output/01-requirements-analysis.md`；
+- `docs/decision-log/cancellation-no-show-fee-v1.md`。
+
+Decision Log 中已批准的决定是本次 V1 基线；与原文冲突时记录差异。待确认和排除项不得进入实现，也不得读取讲师答案。
 
 Requirements：
 - 使用 EARS 风格。
 - 每条有唯一 Requirement ID。
-- 包含验收条件、边界示例和来源追踪。
-- 明确 V1 范围、规则优先级、时间/金额单位、爽约门控、费用封顶、幂等、降级、可解释性和审计。
+- 包含验收条件、边界示例、原始章节和 Decision ID 追踪。
 
 Design：
 - 聚焦纯领域规则引擎。
-- 外部地图、支付、通知和风控通过端口与 fake 实现。
-- 设计 Evidence Snapshot、Rule Version、Decision、Charge、Compensation 和 Audit Event。
-- 可注入 Clock，金额使用整数分。
+- 外部地图、支付、通知和风控通过 ports 与 fake adapters 隔离。
+- 设计是否覆盖证据、规则版本、Decision、收费、补偿、审计、Clock 和整数金额，由已批准 Requirements 决定；不得补未确认规则。
 
 Tasks：
-- 只覆盖最小纵切。
 - 按依赖排序并保持任务可独立审查。
-- 每项说明关联 Requirement ID、修改范围和验证命令。
-- 不实现真实地图、支付、通知或生产部署。
+- 每项说明关联 Requirement ID、允许修改范围、先写的失败测试和验证命令。
+- 不实现真实外部系统或生产部署。
 ```
 
 ## P08：Requirements 评审
@@ -239,7 +238,7 @@ Tasks：
 - 外部地图、支付、通知、风控通过端口访问
 - 日志禁止记录原始电话、精确坐标和安全事件详情
 - 新增业务规则必须包含边界示例和 Property Test
-- 修改后运行项目定义的 typecheck、lint 和目标测试
+- 修改后运行项目当前真实存在的 `npm run check` 和目标测试；只有实际配置了 lint 命令时才要求 Lint
 
 每条规则说明适用范围和验证方式。不要把 Steering 描述成权限或安全隔离。
 ```
@@ -260,7 +259,7 @@ Tasks：
 ## P14：创建质量检查 Hook
 
 ```text
-请为演示项目创建一个 Agent Hook：当 Agent 保存 TypeScript 源码或测试文件后，执行 `npm run typecheck && npm run test:fee`。
+请为演示项目创建一个 Agent Hook：当 Agent 保存 TypeScript 源码或测试文件后，执行当前已经存在的 `npm run check`。学员在测试 Lab 创建业务测试命令后，再由人工审查是否追加该命令。
 
 要求：
 - 只匹配 TypeScript 源码和测试
@@ -272,18 +271,20 @@ Tasks：
 先说明触发事件、matcher 和命令，再通过 Kiro 的 Agent Hooks 功能创建；不要手工拼写未知版本的 Hook schema。
 ```
 
-## P15：Supervised 实施小任务
+## P15：G6 之后执行 Supervised 小任务
 
 ```text
-在 Supervised 模式下，把 `Fee Reuse Pack` 中找到的公共费用组件集成到 `packages/cancellation-demo/src/calculate-cancellation-fee.ts`。
+确认费用适配器业务测试已经在 NOT_IMPLEMENTED Starter 上因业务断言失败，并且已建立 RP-06-red。
+
+在 Supervised 模式下，执行 Feature Spec 中费用适配器对应的一个 Task，把 Fee Reuse Pack 中找到的公共费用组件集成到 `packages/cancellation-demo/src/calculate-cancellation-fee.ts`。
 
 约束：
 - 只修改该目标文件
 - 从 `@company/cancellation-policy-kit` 包根导入 `CappedFeeCalculator` 和金额类型
 - 不创建本地 Money、FeeCalculator 或重复金额算法
-- 不修改企业知识、公共包和团队模板
+- 不修改企业知识、公共包、团队模板、Decision Log 或 Spec
 - 不安装新依赖，不访问网络
-- 修改后运行 `npm run typecheck` 和 `npm run test:fee`
+- 修改后运行学员创建的费用业务测试、`npm run check` 和 `npm run demo`
 - 展示 Diff，并等待人工逐 hunk 审查
 ```
 
@@ -293,7 +294,7 @@ Tasks：
 不要修改任何权限配置。请根据当前 Agent 的 Permissions，列出下面操作预期是 allow、ask 还是 deny，并解释依据：
 1. 读取 `src/`；
 2. 修改一个领域测试；
-3. 运行 `npm run test:fee`；
+3. 运行当前已存在的 `npm run check`；如果 Lab 6 已创建业务测试，再运行该固定命令；
 4. 安装一个新 npm 依赖；
 5. 读取 `.env`；
 6. 读取仓库外目录；
@@ -378,19 +379,19 @@ Tasks：
 每个结论引用代码、测试或需求证据；无法确认的部分明确标注。
 ```
 
-## P22：创建 Bugfix Spec
+## P22：根据诊断证据创建 Bugfix Spec
 
 ```text
-为“天气系数导致取消费超过预估车费”创建 Bugfix Spec。
+根据已附加的失败测试、只读根因分析、相关 Requirement 和当前实现创建 Bugfix Spec。Spec 名称应描述实际失败行为，不得在证据确认前预填根因。
 
 必须包含：
-- Current Behavior：封顶在天气系数之前应用，可能产生超上限费用
-- Expected Behavior：所有适用调整完成后执行最终非负与预估车费封顶
-- Unchanged Behavior：强免责、用户减免、reason code、幂等和审计字段不改变
-- 可复现输入和失败 Property
-- 根因假设及代码证据
-- 最小修复设计
-- 回归测试和验证命令
+- Current Behavior：由失败测试和代码路径证明的当前行为
+- Expected Behavior：来自已批准 Requirement 的期望行为
+- Unchanged Behavior：本次修复不得改变的相邻规则
+- 可复现输入、失败 Property 和运行命令
+- 根因及代码证据；无法确认时保留假设
+- 最小修复设计、允许修改文件和禁止修改范围
+- 能在旧实现失败、修复后通过的回归测试
 
 不要借此重构无关代码或增加新业务规则。
 ```
@@ -410,7 +411,7 @@ Tasks：
 - 大规模格式化或重构
 - 安装依赖
 
-修改后依次运行目标 Property Test、相关单元测试、typecheck 和 lint，并展示 Git Diff。
+修改后依次运行目标 Property Test、相关单元测试和 `npm run check`；只有项目真实存在 lint 命令时才运行 Lint，并展示 Git Diff。
 ```
 
 ## P24：Git Diff 行为评审

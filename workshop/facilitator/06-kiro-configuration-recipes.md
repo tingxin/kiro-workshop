@@ -37,7 +37,7 @@
 - 同一 orderId 与 chargeType 最多一笔成功收费。
 - 关键依赖异常时，取消必须成功，乘客费用为 0，恢复后不得追扣。
 - 日志不得包含原始电话、精确位置或安全事件详情。
-- 修改费用集成后必须运行 `npm run typecheck` 和 `npm run test:fee`。
+- Starter 阶段修改 TypeScript 后必须运行 `npm run check`；学员业务测试命令创建后必须一并运行。
 ```
 
 ## 1.3 结构规则
@@ -78,7 +78,7 @@
 | Trigger | PostFileSave |
 | Matcher | `\.(ts|tsx)$` |
 | Action | command |
-| Command | `npm run typecheck && npm run test:fee` |
+| Command | Starter 使用 `npm run check`；Lab 6 创建业务测试命令后再追加 |
 | Timeout | 60 秒，可按工程速度调整 |
 
 ## 2.2 创建步骤
@@ -113,7 +113,7 @@
 | 读取仓库内需求、Spec、源码、测试 | allow | Demo 必需 |
 | 修改 `src/` 和 `tests/` | ask，熟悉后可有限 allow | 便于演示人工审查 |
 | 修改 `.kiro/` | ask | 会改变 Agent 行为和自动化 |
-| 运行 `npm run typecheck/lint/test:*` | allow | 低风险验证命令 |
+| 运行 `npm run check` 和学员创建的固定测试命令 | allow | 低风险、已审查的验证命令 |
 | 安装或升级依赖 | ask | 会修改供应链和锁文件 |
 | 网络访问 | ask 或 deny | Demo 应离线可运行 |
 | MCP | deny，除非单独演示可信 MCP | 本 Workshop 未选择 MCP |
@@ -126,7 +126,7 @@
 
 选择安全的操作验证三种结果：
 
-- allow：运行 `npm run test:fee`
+- allow：Starter 阶段运行 `npm run check`；业务测试由学员创建后再允许对应固定命令
 - ask：尝试修改 `.kiro/` 或提出安装依赖，但在确认框取消
 - deny：尝试读取专门准备的假敏感文件；不要用删除命令演示拒绝
 

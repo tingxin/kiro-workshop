@@ -30,4 +30,4 @@ for (let base = 0; base <= 2_000; base += 125) {
   }
 }
 
-console.log("fee verification passed: fixed regression and deterministic property cases");
+console.log("policy-kit verification passed: fixed regression and deterministic property cases");

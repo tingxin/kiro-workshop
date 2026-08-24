@@ -11,18 +11,22 @@
 
 ## 讲师入口
 
-讲师从 [讲师资料索引](workshop/facilitator/00-facilitator-index.md) 开始。正式演示只按 [现场演示流程](workshop/facilitator/02-facilitator-runbook.md) 操作。
+学员从 [动手实验手册](workshop/03-hands-on-lab-guide.md) 开始；[学员手册](workshop/02-participant-handout.md) 用于概念速查。讲师从 [讲师资料索引](workshop/facilitator/00-facilitator-index.md) 开始。
 
-## Demo 工程
+> 默认工作区是故意未完成的 Starter。Decision Log、Feature Spec、业务测试和实现必须由学员在 Lab 中使用 Kiro 创建。不要将 `workshop/facilitator/04-answer-key-and-business-decisions.md` 添加到学员 Agent 上下文。
+
+## Starter 工程
 
 ```bash
-npm install --ignore-scripts
-npm run check
+npm ci --ignore-scripts
+npm run check:starter
 npm run demo
 ```
 
-- `npm run check`：编译全部 workspace，并验证公共费用组件的不变量。
-- `npm run demo`：运行 `custom-find-skill` 环节使用的费用集成示例。
+- `npm run test:kit`：只验证预置的企业公共费用组件，不验证学员业务实现。
+- `npm run check`：编译 workspace 并运行公共资产检查。
+- `npm run check:starter`：额外确认目标仍为 `NOT_IMPLEMENTED`，且学员 Decision Log 与 Feature Spec 尚不存在。
+- `npm run demo`：初始状态必须输出 `STARTER`；Lab 7 完成后才应输出 `IMPLEMENTED` 和 900。
 
 ## 关键资产
 

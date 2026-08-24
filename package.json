@@ -12,8 +12,11 @@
     "build": "npm run build:kit && npm run build:demo",
     "demo": "npm run build && npm run start --workspace @workshop/cancellation-demo",
     "typecheck": "npm run build",
-    "test:fee": "npm run build:kit && node scripts/verify-fee.mjs",
-    "check": "npm run typecheck && npm run test:fee"
+    "test:kit": "npm run build:kit && node scripts/verify-fee.mjs",
+    "test:fee": "npm run build && node scripts/verify-cancellation-fee.mjs",
+    "check": "npm run typecheck && npm run test:kit",
+    "check:starter": "npm run check && node scripts/verify-starter.mjs",
+    "check:solution": "npm run check && npm run test:fee && npm run demo"
   },
   "devDependencies": {
     "typescript": "5.9.2"

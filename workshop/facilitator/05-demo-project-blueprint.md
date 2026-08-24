@@ -88,70 +88,63 @@ expected charge = 900
 
 实现前 `npm run demo` 输出 `STARTER`；实现后应输出 `IMPLEMENTED` 和 `charge = 900`。
 
-## 7. 验证命令
+## 7. 验证命令与语义
+
+Starter 预检：
 
 ```bash
 npm ci --ignore-scripts
-npm run typecheck
-npm run test:fee
-npm run check
+npm run check:starter
 npm run demo
 ```
 
-实际脚本：
+初始脚本：
 
 - `typecheck`：编译公共包和 Demo；
-- `test:fee`：验证固定 900 分案例，并对确定性输入组合检查 `0 <= charge <= estimatedFare`；
-- `check`：依次运行类型检查和费用验证；
-- `demo`：运行现场费用集成示例。
+- `test:kit`：只验证预置 `CappedFeeCalculator` 的固定案例和确定性不变量组合；
+- `check`：类型检查加公共 kit 健康检查；
+- `check:starter`：额外证明适配器仍为 `NOT_IMPLEMENTED`，且 Decision Log/Feature Spec 尚未存在；
+- `demo`：Starter 输出 `STARTER`，完成费用 Lab 后输出 `IMPLEMENTED` 和 900。
 
-`test:fee` 验证公共组件。现场目标文件在实现后还需通过 `npm run demo` 验证集成结果。
+真正的适配器业务测试和 `test:fee` 命令由学员在 Lab 6 创建。必须先在 Starter 上因业务断言失败，再在 Lab 7 实现后转绿；不能用 `test:kit` 冒充学员实现验收。
 
 ## 8. Bugfix/Correctness 演示状态
 
-Bugfix 环节与 `custom-find-skill` 起始状态分离：
+Bugfix 环节与 Starter 严格分离：
 
-- Custom Skill 环节：写代码前发现并复用正确资产；
-- Bugfix 环节：打开预先准备的错误封顶顺序和失败 Property Test，完成诊断、Bugfix Spec、最小 Diff 和恢复。
+- 学员先从 State A 亲自生成 Decision Log、Spec、测试和实现，达到 State B；
+- 通过 G7 并建立 `RP-07-implemented` 后，讲师才在独立副本注入 State C；
+- 学员根据失败证据创建 Bugfix Spec 并完成 State D；
+- 预制故障补丁、修复代码和最终 Diff 只允许存在于讲师外置应急包。
 
-正式演示前应使用独立 Git 分支、Kiro checkpoint 或预制输出准备 Bugfix 状态，不能把它混入 `calculate-cancellation-fee.ts` 起始文件。
+## 9. 学习状态
 
-固定 Bug 反例：
+### State A：唯一默认 Starter
 
-```text
-baseFee = 800
-estimatedFare = 1000
-adjustment = 2.0x
-错误结果 = 1600
-正确结果 = 1000
-```
-
-## 9. 演示状态
-
-### State A：Starter
-
-- `npm run check` 通过；
+- `npm run check:starter` 通过；
 - `npm run demo` 输出 `STARTER`；
-- Skill、知识、组件和模板路径均存在。
+- Skill、知识、组件和模板存在；
+- Decision Log、Feature Spec、业务测试和完成实现不存在。
 
-### State B：Fee Integration Implemented
+### State B：学员完成费用纵切
 
+- Decision Log 和 Feature Spec 是学员课堂产物；
+- 业务测试先红后绿；
 - 目标文件只调用公共 `CappedFeeCalculator`；
-- 没有本地 Money 或金额算法；
 - `npm run check` 通过；
 - `npm run demo` 输出 `IMPLEMENTED` 和 900。
 
-### State C：Seeded Bug（单独准备）
+### State C：讲师隔离注入故障
 
-- 错误封顶顺序可稳定复现；
-- 失败测试或预制输出可读；
-- 与 Starter 状态互不污染。
+- 只在 G7 后的独立副本产生；
+- 失败测试和反例可重放；
+- 不污染 Starter 或学员完成态。
 
-### State D：Fixed
+### State D：学员修复
 
-- Bugfix Spec 已完成；
-- Diff 只包含最小修复；
-- 目标和相关验证通过。
+- Bugfix Spec 来自实际诊断证据；
+- Diff 只包含最小修复和回归测试；
+- 学员业务测试、公共检查和 Demo 全部通过。
 
 ## 10. 交付验收
 

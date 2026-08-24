@@ -18,11 +18,11 @@
 
 ## 步骤
 
-1. 打开 `cancellation-no-show-fee-raw-requirements.md`。
-2. 只展示开头、费用计算、特殊场景和验收标准，不提前指出所有问题。
-3. 询问听众：“这份文档能直接交给开发吗？”
-4. 说明所有数据和阈值均为虚构 Demo 基线。
-5. 展示最终目标规则：费用非负、不超过预估车费、强免责优先。
+1. 打开 `cancellation-no-show-fee-raw-requirements.md` 和学员 [动手实验手册](../03-hands-on-lab-guide.md)。
+2. 只展示原始需求开头、费用计算、特殊场景和验收标准，不提前指出所有问题或最终规则。
+3. 运行 `npm run check:starter` 与 `npm run demo`，确认输出 `STARTER`，且没有学员 Decision Log 和 Feature Spec。
+4. 询问听众：“这份文档能直接交给开发吗？”
+5. 说明所有后续阈值都必须由人工角色在课堂确认；讲师答案不得添加到学员 Kiro 上下文。
 
 ## 讲解重点
 
@@ -159,7 +159,7 @@
 
 ## 快速版
 
-只展示 Kiro 找出的前 5 个阻塞问题，并打开预制完整分析。
+只让学员分析前 5 个阻塞问题，并将经人工筛选的最小结果保存到 `workshop-output/01-requirements-analysis.md`。即使压缩时间，也不打开预制完整分析替代学员产出。
 
 ## 备用方案
 
@@ -181,29 +181,22 @@
 
 ## 完整步骤
 
-### 3.1 建立决策记录
+### 3.1 通过角色讨论建立学员 Decision Log
 
-1. 打开 `04-answer-key-and-business-decisions.md` 的 Demo 基线。
-2. 告诉听众这些数值是 Workshop 假设，不是原需求事实。
-3. 使用 Prompt P06，让 Kiro 整理“已确认/待确认/不在 V1”。
+1. 不打开或投屏 `04-answer-key-and-business-decisions.md`，也不把它附加给学员 Kiro。
+2. 依据 Lab 1 的阻塞问题，让产品、架构、测试、安全等角色先讨论；讲师只在需要收敛时逐条扮演业务 owner 宣布一个模拟决定。
+3. 学员记录会议中实际批准的内容，并使用 Prompt P06 写入 `docs/decision-log/cancellation-no-show-fee-v1.md`。
+4. 每轮只处理少量决定，在 Supervised 中拒绝没有会议来源的阈值。
+5. Decision Log 必须同时保留“已批准进入 V1”“仍待确认”“明确排除”，并由产品、架构和测试角色签核后建立 `RP-02-decisions`。
 
-核心决策包括：
-
-- V1 仅实时普通快车、优享和商务车。
-- 时间使用服务端 UTC，金额使用整数分。
-- 接单 120 秒内免费。
-- 距上车点 200 米内持续 30 秒视为验证到达。
-- 验证到达后等待 5 分钟才可判定普通爽约。
-- 法律、安全、无障碍、关键系统异常强制免除乘客费用。
-- 同订单同收费类型最多成功收费一次。
-- 降级时取消成功、乘客不收费、必要司机补偿由平台承担。
+讲师私下使用答案文件检查关键类别是否逐步覆盖，但不能把完整 DEC 列表直接交给 Agent。所有数值都是 Workshop 模拟决定，不是原需求事实。
 
 ### 3.2 创建 Feature Spec
 
 1. 选择 Feature Spec 工作流。
 2. 名称建议：`cancellation-no-show-fee-v1`。
-3. 附加原始需求和确认决策。
-4. 使用 Prompt P07。
+3. 只附加原始需求、学员需求分析和 `docs/decision-log/cancellation-no-show-fee-v1.md`；禁止附加讲师答案。
+4. 使用 Prompt P07，让学员创建 `.kiro/specs/cancellation-no-show-fee-v1/{requirements.md,design.md,tasks.md}`。
 
 ```text
 为“取消订单与爽约费规则中心 V1”创建 Feature Spec。
@@ -366,7 +359,7 @@ Tasks 只覆盖最小纵切，按依赖排序，每项都说明验证命令。�
 
 1. 打开 Agent Hooks UI，不手写 Hook JSON。
 2. 创建仅针对 Agent 修改 TypeScript 文件后的检查 Hook。
-3. 命令建议先使用快速检查：`npm run typecheck && npm run test:fee`。
+3. Starter 阶段先使用已存在的 `npm run check`；学员在 Lab 6 创建业务测试命令后，再把该命令追加到 Hook。
 4. 让 Agent 修改一个无关紧要的 TypeScript 文件，验证 Hook 触发。
 5. 故意造成类型错误，展示 Hook 失败反馈。
 6. 修复后重新验证。
@@ -374,7 +367,7 @@ Tasks 只覆盖最小纵切，按依赖排序，每项都说明验证命令。�
 建议创建 Prompt：
 
 ```text
-请为这个演示项目创建一个 Agent Hook：当 Agent 保存 TypeScript 源码或测试文件后，执行 `npm run typecheck && npm run test:fee`。
+请为这个演示项目创建一个 Agent Hook：当 Agent 保存 TypeScript 源码或测试文件后，执行当前已存在的 `npm run check`。学员业务测试命令创建后再追加，不能假设它已经存在。
 Hook 必须离线、无部署和网络副作用；如果命令失败，只报告错误并让当前任务停在可审查状态。
 请先说明将使用的触发事件、匹配范围和命令，再创建。
 ```
@@ -387,7 +380,7 @@ Hook 必须离线、无部署和网络副作用；如果命令失败，只报告
 
 ## 快速版
 
-打开预制 Steering，现场只创建一个 Hook。
+让学员只创建一份最小技术 Steering 和一个 Hook；不打开预制 Steering 代替学员产出。
 
 ## 备用方案
 
@@ -475,23 +468,20 @@ Hook 不可用时手动执行同一条检查命令，并展示预制 Hook 截图
 
 ## 准备
 
-Demo 工程处于 seeded bug 状态：天气系数在封顶之后应用。
+默认 Starter 和学员完成态都不包含 seeded bug。只有学员通过 G7、业务测试为绿并建立 `RP-07-implemented` 后，讲师才在独立副本或可恢复 Checkpoint 中注入一个可逆回归。故障补丁和完成修复不得提交到学员默认路径。
 
 ## 完整步骤
 
-### 7.1 建立恢复点
+### 7.1 隔离并建立恢复点
 
-1. 检查当前 Git 状态。
-2. 建立 Kiro Checkpoint。
-3. 说明 Checkpoint 只用于短期恢复，不能代替 Git 历史。
+1. 检查当前 Git 状态和 G7 测试证据。
+2. 建立 Kiro Checkpoint `RP-07-implemented`。
+3. 在独立副本注入故障；如果注入失败，展示外置失败输出，不覆盖学员工作区。
+4. 说明 Checkpoint 只用于短期恢复，不能代替 Git 历史，也不会回滚 Shell 或外部副作用。
 
-### 7.2 运行失败测试
+### 7.2 运行学员创建的失败测试
 
-执行：
-
-```bash
-npm run test:fee
-```
+执行 Lab 6 创建的业务测试命令（建议为 `npm run test:fee`）。如果命令不存在，停止并返回 Lab 6，不得用 `test:kit` 冒充业务失败。
 
 预期最小反例接近：
 
@@ -528,7 +518,7 @@ actualCharge = 1600
 2. 使用 Prompt P23，要求只改计算顺序和回归测试。
 3. 审查 Diff，不接受无关重构。
 4. 运行目标 Property Test。
-5. 再运行 typecheck、lint 和相关测试。
+5. 再运行 `npm run check` 和学员 Feature Spec 中实际定义的相关测试；只有项目真实存在 lint 命令时才运行 Lint。
 
 ### 7.6 Git Diff 评审
 
@@ -544,7 +534,7 @@ actualCharge = 1600
 1. 故意让 Agent 做一处不必要的重构。
 2. 展示单轮 Revert。
 3. 如时间允许，恢复到 Checkpoint 并说明会话上下文变化。
-4. 再回到最终修复状态或打开预制最终分支。
+4. 再回到学员自己的最终修复状态；只有学员工作副本不可恢复时，才切换到明确标注的讲师独立应急副本。
 
 ## 讲解重点
 

@@ -18,13 +18,15 @@
 
 ## 剩余 30 分钟
 
-现场操作：
+只完成一个真实的学员纵切：
 
-1. 原始需求分析前 5 个问题
-2. 打开预制 Spec，解释一条需求追踪链
-3. 运行失败 Property Test
-4. Kiro 解释根因并最小修复
-5. 展示最终 Diff 和安全边界表
+1. 学员用 Kiro 分析前 5 个阻塞问题并保存最小分析；
+2. 讲师逐条确认 2–3 个决定，学员创建最小 Decision Log；
+3. 学员创建只覆盖该纵切的最小 Feature Spec；
+4. 运行 Starter，说明测试先行和后续实现 Gate；
+5. 结束时明确当前完成到哪个恢复点，不把未完成部分描述成已实现。
+
+不要用预制 Spec、失败输出或最终 Diff 替代学员正常产出。
 
 ## 剩余 15 分钟
 
@@ -68,7 +70,7 @@
 
 ## 3.4 Spec 工作流不可用
 
-打开预制 `requirements.md`、`design.md`、`tasks.md`，使用 P08/P09 做评审。强调 Spec 的价值在结构化和追踪，而不是按钮本身。
+使用 P07 在普通 Chat 中创建标准路径下的 `requirements.md`、`design.md`、`tasks.md`，仍由学员评审和保存。UI 不可用不等于可以跳过学员产出；只有 Kiro 整体不可用时才展示讲师外置只读样例，并明确不计为学员完成。
 
 ## 3.5 Spec Correctness 不可用
 
@@ -115,16 +117,11 @@
 
 ## 3.13 测试运行太慢
 
-先运行 `npm run test:fee`，完整 `npm run check` 使用预制输出。说明分层验证策略。
+只运行当前 Lab 的最小目标测试。Starter 阶段使用 `npm run test:kit`；Lab 6 之后使用学员创建的业务测试命令。预制输出只能作为讲师外置故障说明，不能作为学员 Gate 通过证据。
 
 ## 3.14 网络或登录失败
 
-使用：
-
-- 预制 Spec 和 Diff
-- 失败与成功测试输出
-- Kiro 操作截图或短录屏
-- Prompt 卡片进行互动式讲解
+Kiro 整体不可用时，可以使用讲师外置样例、截图或短录屏解释方法，但必须明确标注“只读应急演示，未计入学员完成度”。不要把预制 Decision Log、Spec、代码或 Diff 复制到学员默认工作区；恢复后从最近学员 Checkpoint 继续。
 
 不要尝试现场重装软件。
 
@@ -138,25 +135,22 @@
 
 ---
 
-# 4. 演示恢复点
+# 4. 讲师外置应急材料（不进入学员默认路径）
 
-每个模块准备一个“可直接打开”的状态：
+下列材料只用于 Kiro 完全不可用时的只读解释，不能覆盖学员工作区、不能作为正常 Lab Gate 证据，也不能静默切换成学员产物：
 
-| 模块 | 恢复材料 |
+| 模块 | 外置应急材料 |
 |---|---|
-| Analyze Requirements | 预制问题清单 |
-| Feature Spec | requirements/design/tasks |
-| Correctness | 追踪矩阵和 Properties |
-| Steering | 三份预制规则 |
-| Hooks | 配置截图和手动检查命令 |
-| Permissions | 策略表和三类行为截图 |
-| Custom Agents | 两个只读 Agent 配置 |
-| Bug | 固定失败输出与 seed |
-| Fix | 最小正确 Diff |
-| Governance | 三层审计图 |
-| Export | 脱敏包目录截图 |
+| Analyze Requirements | 评分要点和匿名问题样例 |
+| Feature Spec | 只读结构截图，不提供可复制完成文件 |
+| Correctness | 追踪矩阵结构和 Property 格式样例 |
+| Steering/Hooks | 配置截图和手动检查命令 |
+| Permissions/Agents | 策略表和只读角色截图 |
+| Bug | 固定失败输出与故障注入说明 |
+| Fix | 讲师独立副本中的最小 Diff |
+| Governance/Export | 三层审计图和脱敏目录截图 |
 
----
+正常恢复顺序始终是：最近学员 Checkpoint → 验证当前 Gate → 继续下一个 Lab。只有学员副本无法恢复时，才在明确标注的独立副本继续演示。
 
 # 5. 讲师纠偏话术
 

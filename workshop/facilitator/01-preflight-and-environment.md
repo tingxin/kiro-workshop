@@ -24,7 +24,7 @@ Demo 工程使用 TypeScript、npm workspaces 和确定性的 Node.js 费用验�
 | 功能 | 检查内容 | 不可用时的替代 |
 |---|---|---|
 | Chat/上下文 | 能附加文件、目录、Terminal、Problems、Git Diff | 手动粘贴小段上下文 |
-| Feature Spec | 能创建 requirements/design/tasks | 打开预制 Spec 截图或文件 |
+| Feature Spec | 能创建 requirements/design/tasks | 使用结构化 Chat 在标准路径创建同样三份学员产物，不打开预制答案 |
 | Bugfix Spec | 能进入 Bug Fix 工作流 | 使用结构化 Chat Prompt |
 | Analyze Requirements | 菜单或工作流可见 | 使用 P04 分析 Prompt |
 | Spec Correctness | 功能入口可见 | 使用 P10/P11 生成属性和追踪矩阵 |
@@ -38,51 +38,54 @@ Demo 工程使用 TypeScript、npm workspaces 和确定性的 Node.js 费用验�
 
 Kiro UI 和功能入口可能随版本变化。讲师手册描述的是意图和验证点，现场以已安装版本的标签为准。
 
-## 4. Demo 工程预检
+## 4. Starter 工程预检
 
-正式工程创建后，Workshop 前执行一次：
+Workshop 前在学员默认副本执行：
 
 ```bash
 npm ci --ignore-scripts
-npm run typecheck
-npm run test:fee
-npm run check
+npm run check:starter
 npm run demo
 ```
 
 预期：
 
-- `check` 通过类型检查和公共费用不变量验证；
-- Starter 状态的 `demo` 输出 `STARTER`；
-- 完成费用集成后，`demo` 输出 `IMPLEMENTED` 和 900；
-- Bugfix 环节使用单独准备的失败输出或演示状态；
-- 单次目标验证最好在 5 秒内完成。
+- `check:starter` 通过类型检查、公共 kit 检查，并确认学员 Decision Log 与 Feature Spec 尚不存在；
+- `demo` 输出 `STARTER`，目标适配器仍为 `NOT_IMPLEMENTED`；
+- 默认副本不包含 seeded bug、完成 Spec、完成实现或最终 Diff；
+- 单次检查最好在 5 秒内完成。
 
-实际脚本：
+实际初始脚本：
 
 ```json
 {
   "scripts": {
     "typecheck": "npm run build",
-    "test:fee": "npm run build:kit && node scripts/verify-fee.mjs",
-    "check": "npm run typecheck && npm run test:fee",
+    "test:kit": "npm run build:kit && node scripts/verify-fee.mjs",
+    "check": "npm run typecheck && npm run test:kit",
+    "check:starter": "npm run check && node scripts/verify-starter.mjs",
     "demo": "npm run build && npm run start --workspace @workshop/cancellation-demo"
   }
 }
 ```
 
-## 5. 推荐仓库状态
+`test:kit` 只检查预置企业公共组件；学员在测试 Lab 中创建业务适配器测试及 `test:fee` 命令。
 
-准备以下可恢复节点，名称可以按团队规范调整：
+## 5. 学员恢复点与讲师隔离副本
 
-1. `demo/00-baseline`：工程可运行、测试全绿。
-2. `demo/01-raw-requirement`：只有原始需求和基线代码。
-3. `demo/02-spec-ready`：已准备模拟产品决策和预制 Spec。
-4. `demo/03-guardrails-ready`：Steering、Hook、权限说明已完成。
-5. `demo/04-seeded-bug`：封顶顺序 Bug 和失败 Property Test。
-6. `demo/05-fixed`：最终修复状态。
+学员在同一工作副本中依次建立：
 
-不要在现场使用 `git reset --hard`、强制清理或删除学员工作。优先使用独立演示副本、Kiro Checkpoint、非破坏性的 Git 分支或预先复制的目录。
+1. `RP-00-starter`：Starter 检查通过；
+2. `RP-01-analysis`：需求分析经人工筛选；
+3. `RP-02-decisions`：Decision Log 经角色签核；
+4. `RP-03-spec`：学员 Feature Spec 经评审；
+5. `RP-06-red`：业务测试因缺实现而失败；
+6. `RP-07-implemented`：费用纵切实现并验证；
+7. 后续每个 Spec Task 一个恢复点。
+
+讲师的应急 Spec、故障补丁、完成 Diff 和成功输出必须放在独立副本、非默认分支或外部恢复包中。不得静默切换或覆盖学员工作区，也不得把讲师完成态作为正常课堂路径。
+
+不要使用 `git reset --hard`、强制清理或删除学员工作。优先使用 Kiro Checkpoint、非破坏性分支或复制目录。
 
 ## 6. 数据安全准备
 
