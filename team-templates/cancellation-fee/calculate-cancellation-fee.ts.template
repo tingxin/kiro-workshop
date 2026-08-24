@@ -1,0 +1,29 @@
+import {
+  CappedFeeCalculator,
+  type CappedFeeInput,
+  type FeeCalculationTrace,
+  type MoneyMinor,
+} from "@company/cancellation-policy-kit";
+
+export interface CancellationFeeQuote {
+  readonly status: "CALCULATED";
+  readonly charge: MoneyMinor;
+  readonly trace: FeeCalculationTrace;
+}
+
+const calculator = new CappedFeeCalculator();
+
+/**
+ * Team template: thin product integration around the approved calculator.
+ * Policy selection happens upstream; all money behavior stays in the shared package.
+ */
+export function calculateCancellationFee(
+  input: CappedFeeInput,
+): CancellationFeeQuote {
+  const result = calculator.calculate(input);
+  return {
+    status: "CALCULATED",
+    charge: result.charge,
+    trace: result.trace,
+  };
+}

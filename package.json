@@ -1,0 +1,21 @@
+{
+  "name": "cancellation-policy-knowledge-workshop",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build:kit": "npm run build --workspace @company/cancellation-policy-kit",
+    "build:demo": "npm run build --workspace @workshop/cancellation-demo",
+    "build": "npm run build:kit && npm run build:demo",
+    "demo": "npm run build && npm run start --workspace @workshop/cancellation-demo",
+    "typecheck": "npm run build",
+    "test:fee": "npm run build:kit && node scripts/verify-fee.mjs",
+    "check": "npm run typecheck && npm run test:fee"
+  },
+  "devDependencies": {
+    "typescript": "5.9.2"
+  }
+}

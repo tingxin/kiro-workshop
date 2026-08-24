@@ -1,0 +1,14 @@
+{
+  "name": "@workshop/cancellation-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/demo.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/demo.js"
+  },
+  "dependencies": {
+    "@company/cancellation-policy-kit": "1.4.0"
+  }
+}
