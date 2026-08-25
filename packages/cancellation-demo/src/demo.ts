@@ -8,18 +8,12 @@ const result = calculateCancellationFee({
   discount: moneyMinor(0),
 });
 
-console.log(
-  JSON.stringify(
-    {
-      workshopState: result.status === "CALCULATED" ? "IMPLEMENTED" : "STARTER",
-      feeResult: result,
-      expectedAfterLiveImplementation: {
-        status: "CALCULATED",
-        chargeMinor: 900,
-        note: "500 base × 2.0 adjustment is capped by the 900 estimated fare",
-      },
-    },
-    null,
-    2,
-  ),
-);
+console.log(JSON.stringify({
+  workshopState: result.status === "CALCULATED" ? "IMPLEMENTED" : "STARTER",
+  feeResult: result,
+  expectedAfterLiveImplementation: {
+    status: "CALCULATED",
+    chargeMinor: 900,
+    note: "500 base × 2.0 adjustment is capped by the 900 estimated fare",
+  },
+}, null, 2));

@@ -1,39 +1,26 @@
-# Kiro 企业研发实战 Workshop
+# Kiro 取消订单与爽约费规则中心 Workshop
 
-本仓库以“取消订单与爽约费规则中心”为案例，演示 Kiro 从需求分析、Spec 设计、企业资产复用，到开发、测试、缺陷修复和研发治理的完整流程。
+本仓库演示使用 Kiro 将十六章粗糙业务需求转换为需求分析、批准/模拟决定、清晰需求、Feature Spec、可追踪 Tasks、离线参考系统、系统测试和验收报告。
 
-## 客户材料
+## 操作入口
+1. 按 [操作手册](workshop/03-hands-on-lab-guide.md) 从前置条件和第 1 步顺序执行。
+2. 原始输入是 [取消订单与爽约费需求](cancellation-no-show-fee-raw-requirements.md)。
+3. 需要练习企业知识库与 Skill 构建时执行可选的 [企业 Skill 实验](workshop/04-custom-skill-enterprise-knowledge-lab.md)。
+4. 不要把 `workshop/facilitator/` 加入学员上下文。
 
-1. [Workshop 总览](workshop/00-workshop-overview.md)
-2. [课件脚本](workshop/01-slide-deck.md)
-3. [学员手册](workshop/02-participant-handout.md)
-4. [原始业务需求](cancellation-no-show-fee-raw-requirements.md)
+当前 workspace 已包含一次完成的学员试跑：
+- `workshop-output/`：分析、Decision、需求基线、追踪、验收和试跑记录；
+- `.kiro/specs/cancellation-no-show-fee-system/`：Requirements、Design、Tasks；
+- `packages/cancellation-demo/`：离线 TypeScript 规则中心和四角色静态 UI；
+- `scripts/verify-system.mjs`、`scripts/verify-ui.mjs`：无额外依赖的系统验证。
 
-## 讲师入口
-
-学员从 [动手实验手册](workshop/03-hands-on-lab-guide.md) 开始；[学员手册](workshop/02-participant-handout.md) 用于概念速查。讲师从 [讲师资料索引](workshop/facilitator/00-facilitator-index.md) 开始。
-
-> 默认工作区是故意未完成的 Starter。Decision Log、Feature Spec、业务测试和实现必须由学员在 Lab 中使用 Kiro 创建。不要将 `workshop/facilitator/04-answer-key-and-business-decisions.md` 添加到学员 Agent 上下文。
-
-## Starter 工程
-
+## 验证已完成的参考实现
 ```bash
-npm ci --ignore-scripts
-npm run check:starter
+npm run test:system
+npm run check
 npm run demo
 ```
 
-- `npm run test:kit`：只验证预置的企业公共费用组件，不验证学员业务实现。
-- `npm run check`：编译 workspace 并运行公共资产检查。
-- `npm run check:starter`：额外确认目标仍为 `NOT_IMPLEMENTED`，且学员 Decision Log 与 Feature Spec 尚不存在。
-- `npm run demo`：初始状态必须输出 `STARTER`；Lab 7 完成后才应输出 `IMPLEMENTED` 和 900。
+`check:starter` 仅用于尚未生成任何学员产物的初始仓库；当前已完成状态不应再运行它。`test:kit` 只验证公司公共组件，不代表系统验收。
 
-## 关键资产
-
-- 自定义 Skill：`.kiro/skills/custom-find-skill/`
-- 企业业务知识：`enterprise-knowledge-base/`
-- 团队公共包：`packages/company-policy-kit/`
-- 费用集成模板：`team-templates/cancellation-fee/`
-- 现场目标代码：`packages/cancellation-demo/src/calculate-cancellation-fee.ts`
-
-所有业务参数和数据均为教学模拟。本仓库不连接生产环境，也不执行真实收费、退款或部署。
+所有业务数据、规则和外部能力均为教学模拟。地图、支付、结算、通知、客服、风控、配置和旧系统只通过 ports 与内存 Fake；没有真实收费、退款、网络业务调用或部署。验收报告中的 BLOCKED 项不得描述为生产完成。
