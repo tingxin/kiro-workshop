@@ -11,18 +11,33 @@ assert.match(target, /charge:\s*ZERO_MONEY/);
 assert.doesNotMatch(target, /new\s+CappedFeeCalculator|\.calculate\s*\(/);
 
 const learnerOutputs = [
+  "workshop-output/analise.md",
   "workshop-output/01-requirements-analysis.md",
   "workshop-output/02-approved-decisions.md",
   "workshop-output/03-requirements-baseline.md",
   "workshop-output/04-traceability-matrix.md",
   "workshop-output/05-acceptance-report.md",
-  ".kiro/specs/cancellation-no-show-fee-system",
+  ".kiro/specs/cancellation-no-show-fee-system/tasks.md",
+  ".kiro/specs/cancellation-no-show-fee-system/tasks.meta.json",
   ".kiro/steering/cancellation-system.md",
   ".kiro/hooks/cancellation-system-guard.kiro.hook",
 ];
 for (const output of learnerOutputs) {
   assert.equal(existsSync(output), false, `starter must not include learner output: ${output}`);
 }
+
+const fixedSpecAssets = [
+  ".kiro/specs/cancellation-no-show-fee-system/.config.kiro",
+  ".kiro/specs/cancellation-no-show-fee-system/requirements.md",
+  ".kiro/specs/cancellation-no-show-fee-system/design.md",
+];
+for (const asset of fixedSpecAssets) {
+  assert.equal(existsSync(asset), true, `required fixed Spec input is missing: ${asset}`);
+}
+const fixedRequirements = readFileSync(fixedSpecAssets[1], "utf8");
+const fixedDesign = readFileSync(fixedSpecAssets[2], "utf8");
+assert.match(fixedRequirements, /材料类型：Workshop 固定输入，学员无需重新生成/);
+assert.match(fixedDesign, /材料类型：Workshop 固定输入，学员无需重新生成/);
 
 const enterpriseAssets = [
   ".kiro/skills/custom-find-skill",
@@ -36,4 +51,4 @@ for (const asset of enterpriseAssets) {
 }
 
 assert.doesNotMatch(packageJson, /"test:system"\s*:/);
-console.log("starter verification passed: safe adapter, enterprise assets present, learner outputs absent");
+console.log("starter verification passed: fixed Requirements/Design present, learner Tasks/outputs absent");

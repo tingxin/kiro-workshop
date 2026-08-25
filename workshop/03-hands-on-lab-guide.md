@@ -4,8 +4,8 @@
 
 1. 在 Kiro 中打开仓库根目录。
 2. 确认 Node.js、npm 和项目依赖已经准备好；不要临时安装或升级应用依赖。第 14 步使用 Skills CLI 安装社区 Skill，是唯一需要联网的例外，执行前必须获得网络和第三方代码安装许可。
-3. 确认可以使用 Kiro Chat、Feature Spec、Supervised、Agent Hooks 和 Skills。skills.sh 官方明确支持 Kiro CLI；如果 Kiro IDE 没有识别 Skills CLI 安装的 Skill，请在 Kiro CLI 中完成第 14 步，或按当前 Kiro 版本的 Skills 入口重新加载 workspace。
-4. 后续只使用 `cancellation-no-show-fee-raw-requirements.md`、自己生成的文件和项目源码；不要读取 `workshop/facilitator/`。
+3. 确认可以使用 Kiro Chat、聊天模式选择器中的 Spec、Supervised、Agent Hooks 和 Skills。skills.sh 官方明确支持 Kiro CLI；如果 Kiro IDE 没有识别 Skills CLI 安装的 Skill，请在 Kiro CLI 中完成第 14 步，或按当前 Kiro 版本的 Skills 入口重新加载 workspace。
+4. 第 2 步完成前只使用原始需求；确认分析结果后可以读取 `workshop/inputs/simulated-requester-feedback.md`。`.kiro/specs/cancellation-no-show-fee-system/requirements.md` 和 `design.md` 是课程预置的固定材料，不需要重新生成。后续只使用原始需求、固定反馈、企业知识、固定 Spec、自己生成的文件和项目源码；不要读取 `workshop/facilitator/`。
 5. 地图、支付、通知、客服、风控和旧系统均使用接口与 Fake，不连接真实服务。
 6. 若 `workshop-output/05-acceptance-report.md` 已存在，当前目录是已完成的学员快照：新一轮从头实现应使用新的 Starter 副本或 Checkpoint，不能在已完成目录运行 `check:starter`；只复核当前快照时运行 `npm run check`、`npm run demo`，然后从第 16 步执行验收。
 
@@ -39,14 +39,12 @@ status: NOT_IMPLEMENTED
 
 ## 第 2 步：分析原始需求
 
-**Kiro 功能：**Analyze Requirements；如果当前版本没有该入口，使用 Vibe/Chat。
-
-添加 `#File cancellation-no-show-fee-raw-requirements.md`，发送：
+在聊天模式选择器中选择 **Plan**，添加 `#File cancellation-no-show-fee-raw-requirements.md`，发送：
 
 **提示词：**
 
 ```text
-先不要修改文件，也不要提出实现方案。逐章分析这份需求的全部十六个章节。
+只分析需求，不修改文件，也不提出实现方案。逐章分析这份需求的全部十六个章节。
 
 找出歧义、冲突、规则优先级缺失、必要信息缺失、不可验收描述、隐含假设、外部依赖以及安全、隐私和非功能风险。
 
@@ -59,39 +57,66 @@ status: NOT_IMPLEMENTED
 - 一个可以明确作答的问题；
 - 优先级：BLOCKER、HIGH、MEDIUM 或 LOW。
 
-区分原文事实、你的推断和待确认事项。不要自行补充时间、距离、金额、责任、权限或性能阈值。
-先在 Chat 中展示结果，等待我确认后再写入 workshop-output/01-requirements-analysis.md。
+区分原文事实、你的推断和待确认事项。不要自行补充时间、距离、金额、责任、权限或性能阈值。只在 Chat 中展示结果，然后停止并等待我确认。
+```
+
+确认分析结果后，在模式选择器中切换到 **Default**，发送：
+
+```text
+仅将刚才已确认的分析写入 workshop-output/01-requirements-analysis.md，不提出实现方案，不修改其他文件。
 ```
 
 检查十六章是否都被分析。发现遗漏时，要求 Kiro 只补充遗漏章节，不要重写已经确认的内容。
-## 第 3 步：确认业务决定
 
-**Kiro 功能：**Vibe/Chat；写文件时使用 Supervised。
+## 第 3 步：整理已确认的规则
 
-先选择执行模式：
+这一步把第 2 步发现的问题整理成三类：
 
-- 团队模式：把分析交给产品、架构、测试、安全/合规和运营，记录人工会议决定。
-- 自学模式：把 `enterprise-knowledge-base/business/*.md` 和 `enterprise-knowledge-base/architecture/reuse-contracts.md` 作为已批准的 Workshop synthetic decisions；它们不是生产政策。企业知识未覆盖但离线演示必需的项目可以作出保守决定，必须标记 `Workshop synthetic decision`；生产指标、权限和真实集成信息保持 `BLOCKED`。
+- **已确定**：本次练习有明确答案，可以继续设计和实现；
+- **仍需确认**：没有明确答案，后续不能自行猜测；
+- **本次不做**：不属于本次练习范围。
 
-添加原始需求、需求分析、上述企业知识；团队模式再添加会议记录。发送：
+整理后的文件就是后续步骤使用的“规则清单”。其中，Analysis ID 是第 2 步的问题编号，Feedback ID 是反馈文件中的答复编号，DEC-001 是本步骤为规则清单生成的新编号。
 
-**提示词：**
+在聊天模式选择器中使用 **Default**，添加：
+
+- `#File cancellation-no-show-fee-raw-requirements.md`
+- `#File workshop-output/01-requirements-analysis.md`
+- `#File workshop/inputs/simulated-requester-feedback.md`
+- `#Folder enterprise-knowledge-base`
+
+发送：
 
 ```text
-根据附加材料创建 workshop-output/02-approved-decisions.md。
+请根据附加材料创建 workshop-output/02-approved-decisions.md。
 
-分为 APPROVED、BLOCKED 和 OUT_OF_SCOPE。每项使用唯一 Decision ID，记录来源类型（人工会议、已批准 Workshop 企业知识或 Workshop synthetic decision）、批准/模拟角色、影响章节、明确规则、边界、验收方式和与原文的差异。
+把内容分成三部分：
+1. 已确定（APPROVED）；
+2. 仍需确认（BLOCKED）；
+3. 本次不做（OUT_OF_SCOPE）。
 
-企业知识覆盖的决定必须引用准确路径和章节。自学模式下，未覆盖但离线参考系统必须演示的决定采用最保守、无真实副作用的值，并显式标记 Workshop synthetic decision；性能目标、生产权限、真实服务契约、数据保留期和业务指标不得虚构，保持 BLOCKED。禁止把 synthetic decision 描述为生产批准。
+每一项包含：
+- 一个连续编号，例如 DEC-001；
+- 对应的 Analysis ID 和 Feedback ID；
+- 一句话说明处理结果；
+- 依据的文件路径；
+- 如果属于“已确定”，写出如何检查结果是否正确。
+
+不要补充材料中没有的时间、距离、金额、权限或性能指标。只创建这个文件，不修改其他文件。
 ```
 
-审查 Decision Log：责任、免责、爽约、费用、幂等和降级进入实现前必须有可引用来源；仍为 BLOCKED 的内容只能保留端口、Fake 或验收占位，不能猜测生产语义。
+打开 `workshop-output/02-approved-decisions.md`，检查：
+
+- 每个“已确定”项目都有 Analysis ID、Feedback ID 和依据文件；
+- “仍需确认”的项目没有被写成确定规则；
+- “本次不做”的项目没有进入实现范围；
+- 没有出现材料中不存在的新数值或新规则。
 
 ## 第 4 步：生成清晰需求文档
 
-**Kiro 功能：**Vibe/Chat；写文件时使用 Supervised。
+**Kiro 功能：**Default；写文件时使用 Supervised。
 
-添加原始需求、分析文件和 Decision Log，发送：
+添加原始需求、第 2 步的分析文件和第 3 步生成的规则清单，发送：
 
 **提示词：**
 
@@ -112,58 +137,50 @@ status: NOT_IMPLEMENTED
 
 逐章检查原始文档中的条目是否映射到 Requirement、BLOCKED 或 OUT_OF_SCOPE。发现无来源 Requirement 时删除；发现原始条目遗漏时补充映射。
 
-## 第 5 步：创建 Feature Spec
+## 第 5 步：使用固定 Spec 生成任务
 
-**Kiro 功能：**Feature Spec。
+课程已经提供以下两份固定材料，学员不需要重新生成：
 
-创建名为 `cancellation-no-show-fee-system` 的 Feature Spec。添加：
+- `.kiro/specs/cancellation-no-show-fee-system/requirements.md`
+- `.kiro/specs/cancellation-no-show-fee-system/design.md`
 
-- 原始需求；
-- `01-requirements-analysis.md`；
-- `02-approved-decisions.md`；
-- `03-requirements-baseline.md`。
-
-发送：
-
-**提示词：**
+先阅读两份文件，了解要实现的行为和技术结构。然后在聊天模式选择器中选择 **Spec**，添加上述两个文件和 `#File workshop-output/03-requirements-baseline.md`，发送：
 
 ```text
-创建 cancellation-no-show-fee-system Feature Spec。
+requirements.md 和 design.md 是本次 Workshop 的固定输入，不要修改或重新生成。
 
-Requirements 使用 EARS 风格，保留 Requirement ID、原始章节和 Decision ID；覆盖业务行为、异常、安全、解释、兼容和非功能要求；BLOCKED 和 OUT_OF_SCOPE 不得进入实现。
+请只生成 .kiro/specs/cancellation-no-show-fee-system/tasks.md。
 
-Design 使用纯领域核心、应用服务、ports 和 in-memory fake adapters。明确建模订单证据、取消发起方、责任方、免责、取消决定、费用、收费、补偿、退款、规则版本和审计事件。外部地图、支付、通知、客服、风控、配置和旧系统放在端口后。金额使用整数最小单位，时间使用可注入 Clock。定义规则优先级、幂等边界、失败降级、敏感字段投影和确定性重放。费用模块必须复用 @company/cancellation-policy-kit。
-
-Tasks 按依赖排序。每项关联 Requirement ID，列出允许修改文件、应先失败的测试和验证命令。每个 Task 只能完成一个可独立审查的行为。
+要求：
+- 每个任务写明对应的 Requirement ID；
+- 每个任务只完成一个可以独立检查的行为；
+- 按依赖顺序排列；
+- 写明允许修改的文件和验证命令；
+- 使用 Node 内置 node:test 或 node:assert，不安装新的测试依赖；
+- “仍需确认”和“本次不做”的内容不得进入任务；
+- 生成 tasks.md 后停止，不要执行任务或修改代码。
 ```
 
-依次审查并批准 `requirements.md`、`design.md`、`tasks.md`，不要一次批准三份文件。
-## 第 6 步：检查 Spec
+打开 `tasks.md`，检查每个任务是否都有 Requirement ID、明确的文件范围和验证命令。发现任务要求修改固定 `requirements.md` 或 `design.md` 时，删除该要求。
 
-**Kiro 功能：**Spec Correctness；如果当前版本没有该入口，使用 Vibe/Chat。
+## 第 6 步：检查任务是否覆盖固定 Spec
 
-发送：
-
-**提示词：**
+在聊天模式选择器中使用 **Default**，添加固定 `requirements.md`、固定 `design.md` 和刚生成的 `tasks.md`，发送：
 
 ```text
-只检查当前 Spec，不修改代码。
+只检查 tasks.md，不修改固定 requirements.md、固定 design.md 或代码。
 
-检查 Requirements、Design、Tasks 和测试计划是否双向可追踪，重点检查：
-- 订单范围和旧流程；
-- 乘客取消、司机取消和爽约责任；
-- 法律、安全、无障碍和系统异常免责；
-- 费用调整、减免、非负和预估价封顶；
-- 重复和并发请求的幂等；
-- 依赖失败时的取消结果；
-- 用户、司机和客服解释；
-- 配置版本、风控事件、审计、兼容和回滚；
-- BLOCKED 或 OUT_OF_SCOPE 是否被误写进实现。
+逐项检查：
+- REQ-001 至 REQ-018 是否都有对应任务或明确的验证任务；
+- 每个任务是否引用正确的 Requirement ID 和 Design 组件；
+- 是否包含文件范围、验证命令和先测试后实现的顺序；
+- 是否错误包含 requirements.md 中“仍需确认”或“本次不做”的内容；
+- 是否要求安装新依赖、连接真实服务或修改公共组件。
 
-对每个缺口给出 Requirement ID、缺失环节和最小修复建议。修复 Spec 后创建 workshop-output/04-traceability-matrix.md，列出：原始章节、Analysis ID、Decision ID、Requirement ID、Design 组件、Task ID、Test ID 和状态。
+列出缺口和最小修改建议。确认后只修正 tasks.md，并创建 workshop-output/04-traceability-matrix.md，记录 Requirement ID、Design 组件、Task ID、Test ID 和状态。
 ```
 
-修复所有没有 Design、Task 或测试计划的 V1 Requirement。业务规则缺失时返回第 3 步，不要在 Design 中自行补答案。
+固定 Requirements 或 Design 如果存在疑问，只记录并向讲师反馈，不要由学员直接改写。
 
 ## 第 7 步：创建 Steering 和 Hook
 
@@ -212,7 +229,7 @@ Red/Green 开发阶段配置：
 
 **Kiro 功能：**Spec Task Execution、Supervised、Terminal、`#Problems`、`#Git Diff`、Checkpoint。
 
-本仓库不增加测试依赖。Spec 应约定先编译 TypeScript，再用 Node 内置 `node:assert` 或 `node:test` 运行 `scripts/verify-system.mjs`。在第一个系统 Task 开始时增加临时目标命令 `test:system`；Red 阶段允许该命令失败。全部系统测试转绿后，才把 `test:system` 纳入根 `check`。
+固定 Design 已规定使用 Node 内置 `node:test`/`node:assert` 和仓库内确定性生成器，不增加测试依赖。在第一个系统 Task 开始时增加临时目标命令 `test:system`；Red 阶段允许该命令失败。全部系统测试转绿后，才把 `test:system` 纳入根 `check`。
 
 按照 `tasks.md` 顺序，每次只执行一个 Task。使用：
 
@@ -250,9 +267,9 @@ Red/Green 开发阶段配置：
 **提示词：**
 
 ```text
-执行领域基础模型 Task <TASK-ID>。只创建 Design 中批准的领域类型、状态、端口接口和契约测试。至少覆盖 OrderContext、CancellationEvidence、CancelInitiator、LiableParty、ExemptionReason、RuleVersion、CancellationDecision、FeeQuote、Charge、Compensation、Refund、AuditEvent 和 Clock。
+执行领域基础模型 Task <TASK-ID>。只创建固定 Design 中定义的类型和端口，例如 CancellationCommand、NoShowEvidence、MapArrivalEvidence、RuleConfigurationSnapshot、Decision、DecisionAuditEvent、SupportView、Availability 和 Clock。
 
-本 Task 不实现业务规则或外部 SDK。先写类型和契约失败测试，再实现最小类型。运行目标测试和 npm run check，最后展示 #Git Diff。
+本 Task 不实现业务规则或外部 SDK。先写类型和契约测试，再实现最小类型。不要增加 Refund、真实支付/结算或固定 Design 中不存在的模型。运行目标测试和 npm run check，最后展示 #Git Diff。
 ```
 
 ### 9.2 适用范围、责任和免责
@@ -264,23 +281,23 @@ Red/Green 开发阶段配置：
 ```text
 执行责任判定 Task <TASK-ID>，只实现 <REQUIREMENT-IDS> 中的一条规则。
 
-从 Requirement 和 Decision Log 提取前置条件、边界、优先级、reason code、ruleVersion 和 evidence。先测试正常情况、边界前一单位、边界值、规则冲突和免责覆盖。
+从 Requirement 和第 3 步的规则清单中提取前置条件、边界、优先级、reason code、ruleVersion 和 evidence。先测试正常情况、边界前一单位、边界值、规则冲突和免责覆盖。
 
 不得发明时间、距离或责任阈值；发现缺失决定立即停止。实现后运行目标测试和 npm run check，使用 #Git Diff 说明改变和保持不变的行为。
 ```
 
-依次完成 V1 订单范围、乘客主动取消、司机取消、同时取消、法律/安全/无障碍/系统异常免责。
+只执行 `tasks.md` 中与 REQ-002 至 REQ-008 对应的任务；固定 Spec 没有定义的完整司机取消原因或责任映射不得实现。
 
 ### 9.3 乘客爽约
 
 **提示词：**
 
 ```text
-执行乘客爽约 Task <TASK-ID>。只使用批准的到达证据、等待时间、联系尝试和提前结束条件。地图信息由 Map Evidence Port 的 Fake 提供。
+执行乘客爽约 Task <TASK-ID>。只使用固定 Design 中的 MapArrivalEvidence 和 NoShowEvidence。
 
-先测试：全部门控满足、每个门控分别缺失、边界前一单位、边界值、虚假到达、未联系、乘客明确拒绝、安全风险和错误上车点。未满足全部批准条件时不得产生 PASSENGER_NO_SHOW 收费决定。
+先测试：200/201 米、29/30 秒、4 分 59 秒/5 分钟、无联系记录、明确拒乘、未验证到达和证据不可用。明确拒乘只能跳过等待和联系，不能跳过验证到达。
 
-缺少阈值时，团队模式返回第 3 步确认；自学模式只能采用已标记的 Workshop synthetic decision，或将该场景保持 BLOCKED 并用端口契约占位。完成后运行目标测试、npm run check 并审查 #Git Diff。
+缺少证据定义时立即停止，回到第 3 步把该问题放入“仍需确认”；不要自行添加阈值或原因。完成后运行目标测试、npm run check 并审查 #Git Diff。
 ```
 
 ## 第 10 步：实现费用计算
@@ -309,62 +326,59 @@ Red/Green 开发阶段配置：
 运行费用测试和 npm run check，展示 #Git Diff。
 ```
 
-## 第 11 步：实现幂等、补偿和退款
+## 第 11 步：实现 Decision 幂等和模拟效果
 
-**Kiro 功能：**Spec Task Execution + Supervised；并发失败时使用 `#Terminal` 先诊断。
+**Kiro 功能：**Spec Task Execution + Supervised；并发失败时使用 `#Terminal` 诊断。
 
 **提示词：**
 
 ```text
-执行账务状态 Task <TASK-ID>。只使用 Charge、Compensation、Refund 端口和内存 Fake，不连接真实支付或结算。
+执行 Decision 幂等 Task <TASK-ID>，只实现 REQ-011 和固定 Design 的 first-write-wins 契约。
 
-先测试：相同业务键重复请求、并发请求、失败后重试、乱序回调、收费成功但补偿失败、退款后保留原 Decision。测试必须证明最多一次成功收费和最多一次成功补偿，不能只检查幂等键。
+先测试：相同 (orderId, chargeType) 的重复、并发和乱序请求。证明最多保存一个 Decision、记录一条 Decision 审计、一个模拟收费动作和一个模拟补偿动作；重复请求必须返回同一个 Decision。
 
-按照批准的原子性语义实现；语义缺失时，团队模式返回第 3 步，自学模式只能引用已标记的 Workshop synthetic decision 或保持 BLOCKED。完成后运行并发测试、回归测试和 npm run check，使用 #Git Diff 检查外部副作用。
+只使用 DecisionStore、PaymentChargePort、CompensationSettlementPort 和内存 Fake，不连接真实支付或结算，不实现退款。完成后运行并发测试、npm run check，并使用 #Git Diff 检查修改范围。
 ```
 
-不要在同一个 Task 中同时实现收费、补偿和退款；按 `tasks.md` 分开执行。
-## 第 12 步：实现解释、配置、风控和审计
+按 `tasks.md` 中与 REQ-011 对应的任务逐个执行。
+## 第 12 步：实现解释、客服安全视图和审计
 
 **Kiro 功能：**Spec Task Execution + Supervised。
 
-每次只选择乘客解释、司机解释、客服视图、规则配置、风险事件或审计中的一个 Task：
-
-**提示词：**
+每次只执行与 REQ-012、REQ-014、REQ-015 或 REQ-016 对应的一个 Task：
 
 ```text
 执行 <TASK-ID>，本次只实现 <SUBMODULE>，关联 <REQUIREMENT-IDS>。
 
-先写正向和负向测试：
-- 角色视图必须证明普通客服看不到电话、精确坐标和安全详情；
-- 配置必须证明非法值不能发布，版本可以追踪和恢复；
-- 风控只输出批准的风险事件，不实现未批准模型；
-- 审计分别记录 Decision、Charge、Compensation、Refund 和人工操作。
+测试必须证明：
+- 历史 Decision 使用固化的 ruleVersion、公开原因和金额；
+- 普通客服看不到电话、精确坐标、安全详情、风险阈值和支付凭证；
+- 解释只使用公开原因、金额和可用的 ruleVersion；
+- 首次正常或降级 Decision 只产生一条最小审计记录；
+- 缺失值保持未提供，不从内部 trace 推断。
 
-不要把计算 trace 当作审计，不要把解释文本当作权限控制。只修改 Task 允许文件，运行目标测试和 npm run check，最后审查 #Git Diff。
+不要实现真实客服权限、风控、配置发布、退款或人工操作审计。只修改 Task 允许的文件，运行目标测试和 npm run check，最后审查 #Git Diff。
 ```
 
-重复执行，直到该组 Tasks 全部完成。
+## 第 13 步：实现降级与 Legacy 路由
 
-## 第 13 步：实现降级、兼容和上线模拟
-
-**Kiro 功能：**Spec Task Execution + Supervised；失败分析使用 Vibe/Chat、`#Problems` 和 `#Terminal`。
-
-每次只处理一个失败模式或兼容行为：
-
-**提示词：**
+**Kiro 功能：**Spec Task Execution + Supervised；失败分析使用 Default、`#Problems` 和 `#Terminal`。
 
 ```text
-执行降级或兼容 Task <TASK-ID>，关联 <REQUIREMENT-IDS>。
+执行与 REQ-003 或 REQ-017 对应的 Task <TASK-ID>。
 
-使用 Fake 故障注入、Legacy Adapter 或 Feature Flag，不访问真实旧系统。先测试：规则中心不可用时主取消流程仍按批准策略完成；恢复后不会发生未批准追扣；非 V1 订单保持旧行为；双跑不产生第二次收费；Feature Flag 关闭可恢复旧路径。
+使用 Rule、Map、Clock 和 Legacy Port 的内存 Fake，不访问真实旧系统。先测试：
+- 非实时或非白名单订单只返回 LEGACY_FLOW；
+- Rule、关键证据或 Clock 不可用时，取消成功、费用为 0、原因为 DEGRADED_NO_CHARGE；
+- 缺失的时间或 ruleVersion 保持未提供，不得伪造；
+- 依赖恢复后，同一幂等键仍返回原降级 Decision，不产生追扣。
 
-性能任务只报告合成负载的实测结果；没有批准的 P95/P99 时保持 BLOCKED。完成后运行故障测试和 npm run check，用 #Git Diff 确认没有真实副作用。
+不要实现 Feature Flag、灰度、双跑、性能目标或真实回滚。完成后运行故障测试和 npm run check，用 #Git Diff 确认没有真实副作用。
 ```
 
 ## 第 14 步：使用 find-skills 查找 UI Skill 并优化界面
 
-**Kiro 功能：**Terminal、Skills、Vibe/Chat、Supervised、`#Git Diff`。
+**Kiro 功能：**Terminal、Skills、Default、Supervised、`#Git Diff`。
 
 本步骤需要访问 GitHub 和 skills.sh。没有网络或第三方代码安装许可时跳过安装，并在验收报告中记录原因。社区 Skill 名称是 `find-skills`，不是 `find-skill` 或 `finkd-skill`；它与仓库内只查找费用资产的 `custom-find-skill` 不是同一个 Skill。
 
@@ -422,7 +436,7 @@ npx skills add https://github.com/anthropics/skills --skill frontend-design
 
 ### 14.4 使用 frontend-design 创建或重塑 UI
 
-在第 3–6 步明确处理 UI：自学模式可将“离线、只读、无真实服务”的四角色演示界面标记为 Workshop synthetic decision，团队模式必须取得 UI Decision。Spec 至少包含乘客结果、司机补偿、客服安全视图和运营配置预览的 UI Requirement、Design、Task 与验证。没有这些内容时先补齐 Spec，不能直接创建页面。
+固定 Spec 已将生产 UI 和生产部署列为“本次不做”。本节只是可选的 Skill 体验，不修改固定 `requirements.md` 或 `design.md`，也不计入核心系统验收。需要体验时，只制作离线、只读、不连接真实服务的静态演示界面；不需要体验时直接跳到第 15 步。
 
 重新打开会话并确认 `frontend-design` 已加载。根据当前状态选择一条路径：
 
@@ -456,7 +470,7 @@ npx skills add https://github.com/anthropics/skills --skill frontend-design
 **提示词：**
 
 ```text
-/frontend-design 执行已批准的 UI Task <TASK-ID>，严格实现刚才选定的视觉方向，只修改确认过的前端文件。
+/frontend-design 实现刚才选定的可选静态 UI 方向，只修改确认过的前端文件。
 
 使用真实业务内容验证层级，不使用 lorem ipsum。保持 API、业务状态、reason code、权限和测试语义不变。实现桌面与小屏布局、状态/空/错/加载表达、键盘操作、焦点和 reduced-motion；不得增加依赖、外部字体、远程图片或新业务功能。
 
@@ -483,9 +497,9 @@ npx skills add https://github.com/anthropics/skills --skill frontend-design
 
 ## 第 15 步：建立系统测试
 
-**Kiro 功能：**Vibe/Chat 设计测试；Supervised 创建测试。
+**Kiro 功能：**Default 设计测试；Supervised 创建测试。
 
-添加需求基线、完整 Spec 和追踪矩阵，发送：
+添加需求基线、固定 `requirements.md`、固定 `design.md`、学员生成的 `tasks.md` 和追踪矩阵，发送：
 
 **提示词：**
 
@@ -494,7 +508,7 @@ npx skills add https://github.com/anthropics/skills --skill frontend-design
 
 每个场景包含 Test ID、Requirement ID、前置状态、Fake 端口输入、操作、预期 Decision/Fee/Charge/Compensation/Audit 结果和负向断言。
 
-覆盖：乘客取消、司机取消、爽约、免责、费用调整/减免/封顶、重复和并发请求、依赖失败、角色解释、配置版本、审计和旧流程回退。
+覆盖固定 Spec 的白名单/Legacy 路由、强免责、免费窗口、验证到达、爽约、费用选择与封顶、重复和并发请求、依赖降级、公开解释、客服安全视图、规则版本和 Decision 审计。不要加入完整司机取消、退款、风控、配置发布、灰度或生产 UI 场景。
 
 等待我批准矩阵后，再使用 Supervised 创建系统测试，并在 package.json 增加 test:system。不得使用 test:kit 冒充系统验收，不得修改生产代码来迁就测试。
 ```
@@ -517,7 +531,7 @@ npm run check
 确认根因后再按第 8 步执行修复 Task。
 ## 第 16 步：执行最终验收
 
-**Kiro 功能：**Terminal、Vibe/Chat、`#Git Diff`。
+**Kiro 功能：**Terminal、Default、`#Git Diff`。
 
 运行：
 
