@@ -1,28 +1,26 @@
 import {
+  CappedFeeCalculator,
   type CappedFeeInput,
   type FeeCalculationTrace,
   type MoneyMinor,
-  ZERO_MONEY,
 } from "@company/cancellation-policy-kit";
 
 export type CancellationFeeInput = CappedFeeInput;
-export type CancellationFeeQuote =
-  | {
-      readonly status: "NOT_IMPLEMENTED";
-      readonly charge: MoneyMinor;
-    }
-  | {
-      readonly status: "CALCULATED";
-      readonly charge: MoneyMinor;
-      readonly trace: FeeCalculationTrace;
-    };
+export interface CancellationFeeQuote {
+  readonly status: "CALCULATED";
+  readonly charge: MoneyMinor;
+  readonly trace: FeeCalculationTrace;
+}
+
+const calculator = new CappedFeeCalculator();
 
 export function calculateCancellationFee(
-  _input: CancellationFeeInput,
+  input: CancellationFeeInput,
 ): CancellationFeeQuote {
-  // TODO(KIRO-LAB): use the approved company fee calculator here.
+  const result = calculator.calculate(input);
   return {
-    status: "NOT_IMPLEMENTED",
-    charge: ZERO_MONEY,
+    status: "CALCULATED",
+    charge: result.charge,
+    trace: result.trace,
   };
 }
